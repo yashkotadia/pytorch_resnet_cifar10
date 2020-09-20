@@ -264,7 +264,7 @@ def validate(val_loader, model, criterion):
                           i, len(val_loader), batch_time=batch_time, loss=losses,
                           top1=top1))
 
-    wandb.log('val_acc': top1)
+    wandb.log({'val_acc': top1, 'val_loss': losses.avg})
     print(' * Prec@1 {top1.avg:.3f}'
           .format(top1=top1))
 
