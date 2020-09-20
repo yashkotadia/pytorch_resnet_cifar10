@@ -13,6 +13,7 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import resnet
 import dyresnet
+import wandb
 
 model_names = sorted(name for name in resnet.__dict__
     if name.islower() and not name.startswith("__")
@@ -60,11 +61,11 @@ parser.add_argument('--dyrelu', action='store_true', help='Use Dynamic ReLU')
 
 best_prec1 = 0
 
-
 def main():
     global args, best_prec1
     args = parser.parse_args()
 
+    wandb.init(project='drelu', config=args)
 
     # Check the save_dir exists or not
     if not os.path.exists(args.save_dir):
@@ -263,6 +264,7 @@ def validate(val_loader, model, criterion):
                           i, len(val_loader), batch_time=batch_time, loss=losses,
                           top1=top1))
 
+    wandb.log('val_acc': top1)
     print(' * Prec@1 {top1.avg:.3f}'
           .format(top1=top1))
 
