@@ -12,6 +12,7 @@ import torch.utils.data
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import resnet
+import dyresnet
 
 model_names = sorted(name for name in resnet.__dict__
     if name.islower() and not name.startswith("__")
@@ -55,6 +56,8 @@ parser.add_argument('--save-dir', dest='save_dir',
 parser.add_argument('--save-every', dest='save_every',
                     help='Saves checkpoints at every specified number of epochs',
                     type=int, default=10)
+parser.add_argument('--dyrelu', action='store_true', help='Use Dynamic ReLU')
+
 best_prec1 = 0
 
 
@@ -67,7 +70,10 @@ def main():
     if not os.path.exists(args.save_dir):
         os.makedirs(args.save_dir)
 
-    model = torch.nn.DataParallel(resnet.__dict__[args.arch]())
+    if args.dyrelu:
+        model = torch.nn.DataParallel(dyresnet.__dict__[args.arch]())
+    else:
+        model = torch.nn.DataParallel(resnet.__dict__[args.arch]())
     model.cuda()
 
     # optionally resume from a checkpoint
