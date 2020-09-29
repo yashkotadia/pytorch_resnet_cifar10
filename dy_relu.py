@@ -1,3 +1,8 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.nn.init as init
+
 def _make_divisible(v, divisor, min_value=None):
     if min_value is None:
         min_value = divisor
@@ -90,7 +95,7 @@ class DYReLU2(nn.Module):
 
 class DYReLUSpaAtt2(nn.Module):
     def __init__(self, inp, oup, reduction=4, lambda_a=1.0, K2=True, use_bias=True, spa_tau=10.0):
-        super(DoubleSpaLinearSELayer, self).__init__()
+        super(DYReLUSpaAtt2, self).__init__()
         self.oup = oup
         self.lambda_a = lambda_a * 2
         self.K2 = K2
